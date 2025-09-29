@@ -25,14 +25,18 @@ class Game():
             player.dealSingular(self.deck.available)
 
     def addPlayer(self):
-        player = Player()
-        self.players.append(player, self)
+        player = Player(self)
+        self.players.append(player)
         return player
 
     # Blackjack Logic
 
-    def dealStartHand(self, player):
+    def dealerStartHand(self, dealer):
+        dealer.dealCard(self.deck.available, 1)
+
+    def dealStartHand(self, player, dealer):
         player.dealCard(self.deck.available, 2)
+        self.dealerStartHand(dealer)
 
     def getTotal(self, player):
         hand = player.hand
@@ -43,14 +47,47 @@ class Game():
         
         return total
 
+    def playerHit(self, player):
+        card = player.dealCard(self.deck.available, 1)
+        total = self.getTotal(player)
+        print("New Card:", card[0].name)
+        print("New Total:", total)
+
+        if total > 21:
+            print("You busted!")
+        elif total == 21:
+            print("21!")
+        else:
+            self.selectChoice(player)
+
+    def selectChoice(self, player):
+        print("Would you like to hit or stand?")
+        answer = str(input("\n"))
+
+        if answer.lower() == "hit":
+            print("Hit!")
+            time.sleep(1.5)
+            self.playerHit(player)
+        elif answer.lower() == "stand":
+            print("Stand!")
+        else:
+            print("What?")
+            time.sleep(2)
+            self.selectChoice(player)
+
     def blackjack(self, player):
+        dealer = blackJackDealer(self)
         self.deck.fullShuffle() # Shuffle + Split Deck x2
-        self.dealStartHand(player)
+        self.dealStartHand(player, dealer)
         cls()
         player.dispHand()
+        time.sleep(2)
+        dealer.showDealHand()
+        time.sleep(2)
+        self.selectChoice(player)
 
 class blackJackDealer():
-    def __init__(self, hand, gameObj):
+    def __init__(self, gameObj):
         self.hand = [] # Fill with CardObjs
         self.gameObj = gameObj
 
@@ -62,6 +99,12 @@ class blackJackDealer():
             self.hand.append(chosen)
             available.remove(chosen)
 
+    def showDealHand(self):
+        print("Dealer is showing:")
+        for card in self.hand:
+            print(card.name)
+        print("This amounts to:", self.gameObj.getTotal(self))
+
 class Player():
     def __init__(self, gameObj):
         self.hand = []
@@ -69,11 +112,15 @@ class Player():
 
     def dealCard(self, available, quant):
         am = len(available)
+        retTab = []
         for i in range(quant):
             am -= 1
             chosen = available[random.randint(1, am)]
             self.hand.append(chosen)
+            retTab.append(chosen)
             available.remove(chosen)
+
+        return retTab
 
     def dispHand(self):
         print("Your hand is:")
