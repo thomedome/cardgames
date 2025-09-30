@@ -51,7 +51,7 @@ class Game():
     def playerHit(self, player, dealer):
         card = player.dealCard(self.deck.available, 1)
         total = self.getTotal(player)
-        print("New Card:", card[0].name)
+        print("New Card:", card[0])
         print("New Total:", total)
 
         if total > 21:
@@ -66,7 +66,7 @@ class Game():
     def dealerHit(self, dealer):
         card = dealer.dealCard(self.deck.available, 1)
         total = self.getTotal(dealer)
-        print("New Card:", card[0].name)
+        print("New Card:", card[0])
         print("New Total:", total)
 
     def selectChoice(self, player, dealer):
@@ -175,7 +175,7 @@ class blackJackDealer():
     def showDealHand(self):
         print("Dealer is showing:")
         for card in self.hand:
-            print(card.name)
+            print(card)
         print("This amounts to:", self.gameObj.getTotal(self))
 
 class Player():
@@ -198,7 +198,7 @@ class Player():
     def dispHand(self):
         print("Your hand is:")
         for card in self.hand:
-            print(card.name)
+            print(card)
         print("This amounts to:", self.gameObj.getTotal(self))
 
 def mainLoop():

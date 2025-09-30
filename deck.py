@@ -25,7 +25,7 @@ class Deck():
                 count += 1
                 self.available.append(string)
 
-                print(f"\r Added Card", str(count) + "/52", flush=True, end="")
+                print(f"\r<-- Added Card", str(count) + "/52", flush=True, end=" -->")
                 time.sleep(.05)
 
     def debugPrint(self):

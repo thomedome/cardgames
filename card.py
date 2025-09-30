@@ -13,3 +13,6 @@ class Card(): # Static, doesnt do anything outside of existing + setup
                 self.bJackValue = 10
         else:
             self.bJackValue = number
+    
+    def __str__(self):
+        return f"{self.name}"
